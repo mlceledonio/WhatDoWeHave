@@ -3,4 +3,8 @@
     <string name="lbl_item">Item</string>
     <string name="lbl_et_item">Item Name</string>
     <string name="lbl_btn_ok">OK</string>
+    <string name="lbl_quantity">Quantity</string>
+    <string name="lbl_et_quanity">Quantity</string>
+    <string name="lbl_extraction">Expiration</string>
+    <string name="lbl_et_expiration">Expiration</string>
 </resources>
