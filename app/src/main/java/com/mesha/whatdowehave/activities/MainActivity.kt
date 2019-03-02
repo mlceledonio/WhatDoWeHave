@@ -1,12 +1,12 @@
-package com.mesha.whatdowehave
+package com.mesha.whatdowehave.activities
 
 import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.ArrayAdapter
 import android.widget.ListView
+import com.mesha.whatdowehave.R
 import com.mesha.whatdowehave.adapters.ItemListAdapter
 import com.mesha.whatdowehave.models.ItemModel
 import java.lang.Exception
@@ -48,6 +48,7 @@ class MainActivity : AppCompatActivity() {
                 adapter.notifyDataSetChanged()
             }
             cursor?.close()
+            myDatabase.close()
 
         }catch(e: Exception){
             e.printStackTrace()
@@ -88,6 +89,7 @@ class MainActivity : AppCompatActivity() {
             adapter.notifyDataSetChanged()
         }
         cursor?.close()
+        myDatabase.close()
 
     }
 
