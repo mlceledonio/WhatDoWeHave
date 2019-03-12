@@ -25,12 +25,6 @@ class AddItemActivity : AppCompatActivity() {
             etExpiry.hideKeyboard()
             setDate(etExpiry)
         } }
-        /*etExpiry.setOnTouchListener(object: View.OnTouchListener{
-            override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-                etExpiry.showSoftInputOnFocus = false
-                return v?.onTouchEvent(event) ?: true
-            }
-        })*/
 
         etExpiry.setOnClickListener{
             setDate(etExpiry)
