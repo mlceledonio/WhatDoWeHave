@@ -6,10 +6,12 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.View
 import android.widget.ListView
 import com.mesha.whatdowehave.R
 import com.mesha.whatdowehave.adapters.ItemListRVAdapter
+import com.mesha.whatdowehave.classes.SwipeDelete
 import com.mesha.whatdowehave.models.ItemModel
 import java.lang.Exception
 
@@ -24,9 +26,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        recyclerView = findViewById(R.id.list_recycler_view)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = adapter
+
 
         try{
 
@@ -55,7 +55,18 @@ class MainActivity : AppCompatActivity() {
             e.printStackTrace()
         }
 
+        recyclerView = findViewById(R.id.list_recycler_view)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = adapter
 
+        val swipeHandler = object : SwipeDelete(this){
+            override fun onSwiped(p0: RecyclerView.ViewHolder, p1: Int) {
+                adapter.removeAt(p0.adapterPosition)
+            }
+        }
+
+        val itemTouchHelper = ItemTouchHelper(swipeHandler)
+        itemTouchHelper.attachToRecyclerView(recyclerView)
 
         val fab: View = findViewById(R.id.fab)
         fab.setOnClickListener{
