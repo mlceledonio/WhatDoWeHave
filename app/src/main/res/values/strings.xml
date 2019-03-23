@@ -7,4 +7,5 @@
     <string name="lbl_et_quanity">Quantity</string>
     <string name="lbl_extraction">Expiration</string>
     <string name="lbl_et_expiration">Expiration</string>
+    <string name="lbl_btn_update">Update</string>
 </resources>

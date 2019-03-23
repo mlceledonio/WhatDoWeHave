@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.View
+import android.widget.Adapter
 import android.widget.ListView
 import com.mesha.whatdowehave.R
 import com.mesha.whatdowehave.adapters.ItemListRVAdapter
@@ -54,6 +55,16 @@ class MainActivity : AppCompatActivity() {
         }catch(e: Exception){
             e.printStackTrace()
         }
+
+        adapter.setOnItemClickListener(object : ItemListRVAdapter.ItemClickListener{
+            override fun onItemClick(pos: Int, view: View) {
+                val updateIntent = Intent(applicationContext, UpdateItemActivity::class.java)
+                updateIntent.putExtra("KEY_ITEM_NAME", itemList.get(pos).itemName)
+                updateIntent.putExtra("KEY_QUANTITY", itemList.get(pos).quantity)
+                updateIntent.putExtra("KEY_EXPIRATION", itemList.get(pos).expiration)
+                startActivityForResult(updateIntent, 2)
+            }
+        })
 
         recyclerView = findViewById(R.id.list_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(this)

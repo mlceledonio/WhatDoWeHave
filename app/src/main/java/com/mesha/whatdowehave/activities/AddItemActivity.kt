@@ -43,7 +43,8 @@ class AddItemActivity : AppCompatActivity() {
         val month = c.get(Calendar.MONTH)
         val day = c.get(Calendar.DAY_OF_MONTH)
         val dpd = DatePickerDialog(this, DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-            et.setText("$dayOfMonth/$monthOfYear/$year")
+            var modifiedMonth = monthOfYear + 1
+            et.setText("$dayOfMonth/$modifiedMonth/$year")
         }, year, month, day)
         dpd.show()
     }

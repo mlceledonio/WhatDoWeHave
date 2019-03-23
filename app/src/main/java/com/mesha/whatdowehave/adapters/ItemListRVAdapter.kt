@@ -10,13 +10,16 @@ import com.mesha.whatdowehave.R
 import com.mesha.whatdowehave.models.ItemModel
 import kotlinx.android.synthetic.main.column_item_list.view.*
 
-class ViewHolder (view: View) : RecyclerView.ViewHolder(view){
-    val txtItemName = view.tv_listItem
-    val txtQuantity = view.tv_listQty
-    val txtExpiration = view.tv_listExp
-}
 
-class ItemListRVAdapter(val items: ArrayList<ItemModel>, val context: Context) : RecyclerView.Adapter<ViewHolder>(){
+
+class ItemListRVAdapter(val items: ArrayList<ItemModel>, val context: Context) : RecyclerView.Adapter<ItemListRVAdapter.ViewHolder>(){
+
+    lateinit var clickListener: ItemClickListener
+
+    fun setOnItemClickListener(clickListener: ItemClickListener){
+        this.clickListener = clickListener
+    }
+
     override fun getItemCount(): Int {
         return items.size
     }
@@ -30,6 +33,7 @@ class ItemListRVAdapter(val items: ArrayList<ItemModel>, val context: Context) :
         holder?.txtQuantity.text = (items[position].quantity).toString()
         holder?.txtExpiration.text = items[position].expiration
     }
+
 
     fun removeAt(position: Int){
         val myDatabase = context.openOrCreateDatabase("item_list", Context.MODE_PRIVATE, null)
@@ -45,6 +49,24 @@ class ItemListRVAdapter(val items: ArrayList<ItemModel>, val context: Context) :
         Log.d("SQL_DELETE", delRes.toString())
         Log.d("SQL_DELETE", selRes.toString())
         notifyItemRemoved(position)
+    }
+
+    inner class ViewHolder (view: View) : RecyclerView.ViewHolder(view),View.OnClickListener{
+        override fun onClick(v: View) {
+            clickListener.onItemClick(adapterPosition, v)
+        }
+
+        val txtItemName = view.tv_listItem
+        val txtQuantity = view.tv_listQty
+        val txtExpiration = view.tv_listExp
+
+        init {
+            itemView.setOnClickListener(this)
+        }
+    }
+
+    interface ItemClickListener{
+        fun onItemClick(pos: Int, view: View)
     }
 }
 
