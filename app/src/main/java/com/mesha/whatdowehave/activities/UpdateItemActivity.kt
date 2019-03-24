@@ -65,6 +65,13 @@ class UpdateItemActivity : AppCompatActivity() {
 
         try{
             val myDatabase = this.openOrCreateDatabase("item_list", Context.MODE_PRIVATE, null)
+            val sqlSelect = "SELECT item_id, quantity FROM item WHERE item_name = '$newItemName' AND expiration = '$newExpiration'"
+            val selectResult = myDatabase.rawQuery(sqlSelect, null)
+            selectResult.moveToFirst()
+            if(selectResult.count == 1){
+                //TODO
+            }
+
             val sqlUpdate = "UPDATE item SET item_name = '$newItemName', quantity = $newQuantity, expiration = '$newExpiration' WHERE item_name = '$oldItemName' AND quantity = $oldQuantity AND expiration = '$oldExpiration'"
             myDatabase.execSQL(sqlUpdate)
             myDatabase.close()

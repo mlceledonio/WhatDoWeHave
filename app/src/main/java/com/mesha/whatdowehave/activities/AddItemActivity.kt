@@ -5,6 +5,7 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -62,14 +63,39 @@ class AddItemActivity : AppCompatActivity() {
 
         try{
 
-            val myDatabase = this.openOrCreateDatabase("item_list", Context.MODE_PRIVATE, null)
-            val sqlInsert = "INSERT INTO item (item_name, quantity, expiration) VALUES (?, ?, ?)"
-            val statement  = myDatabase.compileStatement(sqlInsert)
+            val newItem = etNewItem.text
+            val newQty = etNewQty.text
+            val newExp = etNewExp.text
 
-            statement.bindString(1,etNewItem.text.toString())
-            statement.bindString(2,etNewQty.text.toString())
-            statement.bindString(3,etNewExp.text.toString())
-            statement.execute()
+            val myDatabase = this.openOrCreateDatabase("item_list", Context.MODE_PRIVATE, null)
+            val sqlSelect = "SELECT item_id, quantity FROM item WHERE item_name = '$newItem' AND expiration = '$newExp'"
+            val selectResult = myDatabase.rawQuery(sqlSelect, null)
+
+            selectResult.moveToFirst()
+
+            if(selectResult.count == 0){
+
+                Log.d("AddItem", "selectResult is zero")
+
+                val sqlInsert = "INSERT INTO item (item_name, quantity, expiration) VALUES (?, ?, ?)"
+                val statement  = myDatabase.compileStatement(sqlInsert)
+
+                statement.bindString(1,newItem.toString())
+                statement.bindString(2,newQty.toString())
+                statement.bindString(3,newExp.toString())
+                statement.execute()
+            } else {
+
+                Log.d("AddItemDebug", "selectResult is not zero")
+                val itemId = selectResult.getInt(selectResult.getColumnIndex("item_id"))
+                Log.d("AddItemDebug", "itemId is " + itemId)
+                val updatedQuantity = selectResult.getInt(selectResult.getColumnIndex("quantity")) + newQty.toString().toInt()
+                Log.d("AddItemDebug", "updatedQuantity is " + updatedQuantity)
+                val sqlUpdate = "UPDATE item SET quantity = $updatedQuantity WHERE item_id = $itemId"
+                myDatabase.execSQL(sqlUpdate)
+            }
+
+
             myDatabase.close()
 
         }catch (e:Exception){
