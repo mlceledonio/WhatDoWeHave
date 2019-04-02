@@ -36,7 +36,7 @@ class ItemListRVAdapter(val items: ArrayList<ItemModel>, val context: Context) :
         holder.txtQuantity.text = (items[position].quantity).toString()
         holder.txtExpiration.text = items[position].expiration
 
-        if(SimpleDateFormat("dd/MM/yyyy").parse(items[position].expiration).before(Date())){
+        if((items[position].expiration.isNotBlank()) && SimpleDateFormat("dd/MM/yyyy").parse(items[position].expiration).before(Date())){
             holder.txtItemName.setTextColor(Color.RED)
             holder.txtQuantity.setTextColor(Color.RED)
             holder.txtExpiration.setTextColor(Color.RED)
