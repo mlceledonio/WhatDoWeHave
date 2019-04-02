@@ -63,9 +63,9 @@ class AddItemActivity : AppCompatActivity() {
 
         try{
 
-            val newItem = etNewItem.text
-            val newQty = etNewQty.text
-            val newExp = etNewExp.text
+            val newItem = etNewItem.text.toString().toLowerCase()
+            val newQty = etNewQty.text.toString()
+            val newExp = etNewExp.text.toString()
 
             val myDatabase = this.openOrCreateDatabase("item_list", Context.MODE_PRIVATE, null)
             val sqlSelect = "SELECT item_id, quantity FROM item WHERE item_name = '$newItem' AND expiration = '$newExp'"

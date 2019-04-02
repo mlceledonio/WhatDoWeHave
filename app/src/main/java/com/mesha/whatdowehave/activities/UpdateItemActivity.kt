@@ -59,19 +59,12 @@ class UpdateItemActivity : AppCompatActivity() {
         val etUpdateQuantity: EditText = findViewById(R.id.et_update_quantity)
         val etUpdateExpiration: EditText = findViewById(R.id.et_update_expiration)
 
-        val newItemName = etUpdateItemName.text
-        val newQuantity = etUpdateQuantity.text
-        val newExpiration = etUpdateExpiration.text
+        val newItemName = etUpdateItemName.text.toString().toLowerCase()
+        val newQuantity = etUpdateQuantity.text.toString()
+        val newExpiration = etUpdateExpiration.text.toString()
 
         try{
             val myDatabase = this.openOrCreateDatabase("item_list", Context.MODE_PRIVATE, null)
-            val sqlSelect = "SELECT item_id, quantity FROM item WHERE item_name = '$newItemName' AND expiration = '$newExpiration'"
-            val selectResult = myDatabase.rawQuery(sqlSelect, null)
-            selectResult.moveToFirst()
-            if(selectResult.count == 1){
-                //TODO
-            }
-
             val sqlUpdate = "UPDATE item SET item_name = '$newItemName', quantity = $newQuantity, expiration = '$newExpiration' WHERE item_name = '$oldItemName' AND quantity = $oldQuantity AND expiration = '$oldExpiration'"
             myDatabase.execSQL(sqlUpdate)
             myDatabase.close()

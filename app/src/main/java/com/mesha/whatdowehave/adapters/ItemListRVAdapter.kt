@@ -1,6 +1,7 @@
 package com.mesha.whatdowehave.adapters
 
 import android.content.Context
+import android.graphics.Color
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,7 +10,9 @@ import android.view.ViewGroup
 import com.mesha.whatdowehave.R
 import com.mesha.whatdowehave.models.ItemModel
 import kotlinx.android.synthetic.main.column_item_list.view.*
-
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.util.*
 
 
 class ItemListRVAdapter(val items: ArrayList<ItemModel>, val context: Context) : RecyclerView.Adapter<ItemListRVAdapter.ViewHolder>(){
@@ -29,9 +32,15 @@ class ItemListRVAdapter(val items: ArrayList<ItemModel>, val context: Context) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder?.txtItemName?.text = items[position].itemName
-        holder?.txtQuantity.text = (items[position].quantity).toString()
-        holder?.txtExpiration.text = items[position].expiration
+        holder.txtItemName.text = items[position].itemName
+        holder.txtQuantity.text = (items[position].quantity).toString()
+        holder.txtExpiration.text = items[position].expiration
+
+        if(SimpleDateFormat("dd/MM/yyyy").parse(items[position].expiration).before(Date())){
+            holder.txtItemName.setTextColor(Color.RED)
+            holder.txtQuantity.setTextColor(Color.RED)
+            holder.txtExpiration.setTextColor(Color.RED)
+        }
     }
 
 
