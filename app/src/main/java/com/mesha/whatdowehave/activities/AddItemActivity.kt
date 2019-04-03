@@ -10,6 +10,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.Toast
 import com.mesha.whatdowehave.R
 import java.lang.Exception
 import java.util.*
@@ -57,6 +58,7 @@ class AddItemActivity : AppCompatActivity() {
 
 
     private fun saveItem(){
+
         val etNewItem: EditText = findViewById(R.id.et_itemName)
         val etNewQty: EditText = findViewById(R.id.et_quantity)
         val etNewExp: EditText = findViewById(R.id.et_expiration)
@@ -67,43 +69,52 @@ class AddItemActivity : AppCompatActivity() {
             val newQty = etNewQty.text.toString()
             val newExp = etNewExp.text.toString()
 
-            val myDatabase = this.openOrCreateDatabase("item_list", Context.MODE_PRIVATE, null)
-            val sqlSelect = "SELECT item_id, quantity FROM item WHERE item_name = '$newItem' AND expiration = '$newExp'"
-            val selectResult = myDatabase.rawQuery(sqlSelect, null)
-
-            selectResult.moveToFirst()
-
-            if(selectResult.count == 0){
-
-                Log.d("AddItem", "selectResult is zero")
-
-                val sqlInsert = "INSERT INTO item (item_name, quantity, expiration) VALUES (?, ?, ?)"
-                val statement  = myDatabase.compileStatement(sqlInsert)
-
-                statement.bindString(1,newItem.toString())
-                statement.bindString(2,newQty.toString())
-                statement.bindString(3,newExp.toString())
-                statement.execute()
+            if(newItem.isBlank() || newItem.isEmpty()){
+                Toast.makeText(this, "Item Name is required", Toast.LENGTH_LONG).show()
+            } else if (newQty.isBlank() || newQty.isEmpty() || newQty.equals("0")){
+                Toast.makeText(this, "Quantity is required", Toast.LENGTH_LONG).show()
             } else {
+                val myDatabase = this.openOrCreateDatabase("item_list", Context.MODE_PRIVATE, null)
+                val sqlSelect = "SELECT item_id, quantity FROM item WHERE item_name = '$newItem' AND expiration = '$newExp'"
+                val selectResult = myDatabase.rawQuery(sqlSelect, null)
 
-                Log.d("AddItemDebug", "selectResult is not zero")
-                val itemId = selectResult.getInt(selectResult.getColumnIndex("item_id"))
-                Log.d("AddItemDebug", "itemId is " + itemId)
-                val updatedQuantity = selectResult.getInt(selectResult.getColumnIndex("quantity")) + newQty.toString().toInt()
-                Log.d("AddItemDebug", "updatedQuantity is " + updatedQuantity)
-                val sqlUpdate = "UPDATE item SET quantity = $updatedQuantity WHERE item_id = $itemId"
-                myDatabase.execSQL(sqlUpdate)
+                selectResult.moveToFirst()
+
+                if(selectResult.count == 0){
+
+                    Log.d("AddItem", "selectResult is zero")
+
+                    val sqlInsert = "INSERT INTO item (item_name, quantity, expiration) VALUES (?, ?, ?)"
+                    val statement  = myDatabase.compileStatement(sqlInsert)
+
+                    statement.bindString(1,newItem.toString())
+                    statement.bindString(2,newQty.toString())
+                    statement.bindString(3,newExp.toString())
+                    statement.execute()
+                } else {
+
+                    Log.d("AddItemDebug", "selectResult is not zero")
+                    val itemId = selectResult.getInt(selectResult.getColumnIndex("item_id"))
+                    Log.d("AddItemDebug", "itemId is " + itemId)
+                    val updatedQuantity = selectResult.getInt(selectResult.getColumnIndex("quantity")) + newQty.toString().toInt()
+                    Log.d("AddItemDebug", "updatedQuantity is " + updatedQuantity)
+                    val sqlUpdate = "UPDATE item SET quantity = $updatedQuantity WHERE item_id = $itemId"
+                    myDatabase.execSQL(sqlUpdate)
+                }
+
+
+                myDatabase.close()
+                val intent = intent
+                setResult(Activity.RESULT_OK, intent)
+                finish()
             }
 
 
-            myDatabase.close()
 
         }catch (e:Exception){
             e.printStackTrace()
         }
 
-        val intent = intent
-        setResult(Activity.RESULT_OK, intent)
-        finish()
+
     }
 }
