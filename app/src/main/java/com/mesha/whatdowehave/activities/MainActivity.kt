@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Adapter
 import android.widget.ListView
@@ -18,7 +20,6 @@ import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var listView: ListView
     private lateinit var recyclerView: RecyclerView
     var itemList:ArrayList<ItemModel> = arrayListOf()
     var adapter = ItemListRVAdapter(itemList, this)
@@ -26,8 +27,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-
 
         try{
 
@@ -86,9 +85,20 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun addItem() {
-        val intent = Intent(applicationContext, AddItemActivity::class.java)
-        startActivityForResult(intent, 1)
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.action_archive -> {
+                showArchive()
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -116,6 +126,16 @@ class MainActivity : AppCompatActivity() {
         cursor?.close()
         myDatabase.close()
 
+    }
+
+    private fun addItem() {
+        val intent = Intent(applicationContext, AddItemActivity::class.java)
+        startActivityForResult(intent, 1)
+    }
+
+    private fun showArchive(){
+        val intent = Intent(applicationContext, ArchiveActivity::class.java)
+        startActivity(intent)
     }
 
 }
