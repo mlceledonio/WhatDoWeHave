@@ -28,10 +28,10 @@ class ArchiveActivity : AppCompatActivity() {
 
         try{
             Log.d("ArchiveDebug", "Entered try phrase")
-            val dateToday = SimpleDateFormat("dd/MM/yyyy").format(Date())
+            val dateToday = SimpleDateFormat("yyyy-MM-dd").format(Date())
             Log.d("ArchiveDebug", dateToday.toString())
             val myDatabase = this.openOrCreateDatabase("item_list", Context.MODE_PRIVATE, null)
-            val sqlSelectName = "SELECT item_id, item_name, quantity, expiration FROM item WHERE date(expiration) < date('$dateToday')"
+            val sqlSelectName = "SELECT item_id, item_name, quantity, expiration FROM item WHERE expiration < date('$dateToday')"
             Log.d("ArchiveDebug", sqlSelectName)
             val cursor = myDatabase.rawQuery(sqlSelectName, null)
             val itemIdIx = cursor.getColumnIndex("item_id")

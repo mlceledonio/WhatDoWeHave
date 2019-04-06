@@ -1,5 +1,7 @@
 package com.mesha.whatdowehave.models
 
+import java.text.SimpleDateFormat
+
 class ItemModel{
 
     var itemId: Int = 0
@@ -11,7 +13,7 @@ class ItemModel{
         this.itemId = itemId
         this.itemName = itemName
         this.quantity = quantity
-        this.expiration = expiration
+        this.expiration = SimpleDateFormat("dd/MM/yyyy").format(SimpleDateFormat("yyyy-MM-dd").parse(expiration))
     }
 
 }

@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         try{
 
             val myDatabase = this.openOrCreateDatabase("item_list", Context.MODE_PRIVATE, null)
-            val sqlCreate = "CREATE TABLE IF NOT EXISTS item (item_id INTEGER PRIMARY KEY,item_name VARCHAR NOT NULL, quantity INT NOT NULL, expiration DATE)"
+            val sqlCreate = "CREATE TABLE IF NOT EXISTS item (item_id INTEGER PRIMARY KEY,item_name VARCHAR NOT NULL, quantity INT NOT NULL, expiration TEXT)"
             myDatabase.execSQL(sqlCreate)
             val sqlSelectName = "SELECT item_id, item_name, quantity, expiration FROM item"
             val cursor = myDatabase.rawQuery(sqlSelectName, null)

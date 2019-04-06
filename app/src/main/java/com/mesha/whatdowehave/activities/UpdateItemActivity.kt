@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.EditText
 import com.mesha.whatdowehave.R
 import java.lang.Exception
+import java.text.SimpleDateFormat
 import java.util.*
 
 class UpdateItemActivity : AppCompatActivity() {
@@ -63,9 +64,13 @@ class UpdateItemActivity : AppCompatActivity() {
         val newQuantity = etUpdateQuantity.text.toString()
         val newExpiration = etUpdateExpiration.text.toString()
 
+        //Convert date format to DB acceptable format
+        val dbExp = SimpleDateFormat("yyyy-MM-dd").format(SimpleDateFormat("dd/MM/yyyy").parse(newExpiration))
+        val dbOldExp = SimpleDateFormat("yyyy-MM-dd").format(SimpleDateFormat("dd/MM/yyyy").parse(oldExpiration))
+
         try{
             val myDatabase = this.openOrCreateDatabase("item_list", Context.MODE_PRIVATE, null)
-            val sqlUpdate = "UPDATE item SET item_name = '$newItemName', quantity = $newQuantity, expiration = '$newExpiration' WHERE item_name = '$oldItemName' AND quantity = $oldQuantity AND expiration = '$oldExpiration'"
+            val sqlUpdate = "UPDATE item SET item_name = '$newItemName', quantity = $newQuantity, expiration = '$dbExp' WHERE item_name = '$oldItemName' AND quantity = $oldQuantity AND expiration = '$dbOldExp'"
             myDatabase.execSQL(sqlUpdate)
             myDatabase.close()
 
