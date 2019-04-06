@@ -7,11 +7,10 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Adapter
-import android.widget.ListView
 import com.mesha.whatdowehave.R
 import com.mesha.whatdowehave.adapters.ItemListRVAdapter
 import com.mesha.whatdowehave.classes.SwipeDelete
@@ -33,7 +32,7 @@ class MainActivity : AppCompatActivity() {
             val myDatabase = this.openOrCreateDatabase("item_list", Context.MODE_PRIVATE, null)
             val sqlCreate = "CREATE TABLE IF NOT EXISTS item (item_id INTEGER PRIMARY KEY,item_name VARCHAR NOT NULL, quantity INT NOT NULL, expiration TEXT)"
             myDatabase.execSQL(sqlCreate)
-            val sqlSelectName = "SELECT item_id, item_name, quantity, expiration FROM item"
+            val sqlSelectName = "SELECT item_id, item_name, quantity, expiration FROM item WHERE quantity != 0"
             val cursor = myDatabase.rawQuery(sqlSelectName, null)
             val itemIdIx = cursor.getColumnIndex("item_id")
             val itemNameIx = cursor.getColumnIndex("item_name")
@@ -42,7 +41,7 @@ class MainActivity : AppCompatActivity() {
 
 
             cursor.moveToFirst()
-            while (cursor != null){
+            while (cursor != null && !cursor.isAfterLast){
                 var tItem = ItemModel(cursor.getInt(itemIdIx) ,cursor.getString(itemNameIx), cursor.getInt(qtyIx), cursor.getString(expIx))
                 itemList.add(tItem)
 
@@ -87,7 +86,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
-        inflater.inflate(R.menu.menu, menu)
+        inflater.inflate(R.menu.menu_main, menu)
         return true
     }
 
@@ -95,17 +94,18 @@ class MainActivity : AppCompatActivity() {
         when(item.itemId){
             R.id.action_archive -> {
                 showArchive()
-                return true;
+                return true
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        Log.d("ColorDebug", "Main: onActivityResult")
         super.onActivityResult(requestCode, resultCode, data)
 
         val myDatabase = this.openOrCreateDatabase("item_list", Context.MODE_PRIVATE, null)
-        val sqlSelectName = "SELECT item_id, item_name, quantity, expiration FROM item"
+        val sqlSelectName = "SELECT item_id, item_name, quantity, expiration FROM item WHERE quantity != 0"
         val cursor = myDatabase.rawQuery(sqlSelectName, null)
         val itemIdIx = cursor.getColumnIndex("item_id")
         val itemNameIx = cursor.getColumnIndex("item_name")
@@ -121,7 +121,9 @@ class MainActivity : AppCompatActivity() {
             itemList.add(tItem)
 
             cursor.moveToNext()
+            Log.d("ColorDebug", "Main: beforeNotify")
             adapter.notifyDataSetChanged()
+            Log.d("ColorDebug", "Main: afterNotify")
         }
         cursor?.close()
         myDatabase.close()

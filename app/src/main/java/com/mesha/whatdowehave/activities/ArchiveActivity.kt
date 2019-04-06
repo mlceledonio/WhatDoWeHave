@@ -1,12 +1,15 @@
 package com.mesha.whatdowehave.activities
 
 import android.content.Context
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import com.mesha.whatdowehave.R
 import com.mesha.whatdowehave.adapters.ItemListRVAdapter
 import com.mesha.whatdowehave.classes.SwipeDelete
@@ -31,7 +34,7 @@ class ArchiveActivity : AppCompatActivity() {
             val dateToday = SimpleDateFormat("yyyy-MM-dd").format(Date())
             Log.d("ArchiveDebug", dateToday.toString())
             val myDatabase = this.openOrCreateDatabase("item_list", Context.MODE_PRIVATE, null)
-            val sqlSelectName = "SELECT item_id, item_name, quantity, expiration FROM item WHERE expiration < date('$dateToday')"
+            val sqlSelectName = "SELECT item_id, item_name, quantity, expiration FROM item WHERE quantity = 0"
             Log.d("ArchiveDebug", sqlSelectName)
             val cursor = myDatabase.rawQuery(sqlSelectName, null)
             val itemIdIx = cursor.getColumnIndex("item_id")
@@ -40,7 +43,7 @@ class ArchiveActivity : AppCompatActivity() {
             val expIx = cursor.getColumnIndex("expiration")
 
             cursor.moveToFirst()
-            while (cursor != null){
+            while (cursor != null && !cursor.isAfterLast){
                 var tItem = ItemModel(cursor.getInt(itemIdIx) ,cursor.getString(itemNameIx), cursor.getInt(qtyIx), cursor.getString(expIx))
                 itemList.add(tItem)
 
@@ -68,7 +71,27 @@ class ArchiveActivity : AppCompatActivity() {
 
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
         itemTouchHelper.attachToRecyclerView(recyclerView)
+    }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.menu_archive, menu)
+        return true
+    }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.action_main -> {
+                showMain()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun showMain(){
+        Log.d("ArchiveDebug", "Show main")
+        val intent = Intent(applicationContext, MainActivity::class.java)
+        startActivity(intent)
     }
 }

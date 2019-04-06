@@ -20,18 +20,22 @@ class ItemListRVAdapter(val items: ArrayList<ItemModel>, val context: Context) :
     lateinit var clickListener: ItemClickListener
 
     fun setOnItemClickListener(clickListener: ItemClickListener){
+        Log.d("ColorDebug","Adapter: set on Item Click Listener")
         this.clickListener = clickListener
     }
 
     override fun getItemCount(): Int {
+        Log.d("ColorDebug","Adapter: get Item Count")
         return items.size
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        Log.d("ColorDebug","Adapter: on Create View Holder")
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.column_item_list, parent, false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        Log.d("ColorDebug","Adapter: on Bind View Holder")
         holder.txtItemName.text = items[position].itemName
         holder.txtQuantity.text = (items[position].quantity).toString()
         holder.txtExpiration.text = items[position].expiration
@@ -41,10 +45,16 @@ class ItemListRVAdapter(val items: ArrayList<ItemModel>, val context: Context) :
             holder.txtQuantity.setTextColor(Color.RED)
             holder.txtExpiration.setTextColor(Color.RED)
         }
+
+        if((items[position].expiration.isNotBlank()) && SimpleDateFormat("dd/MM/yyyy").parse(items[position].expiration).after(Date())){
+            holder.txtItemName.setTextColor(Color.DKGRAY)
+            holder.txtQuantity.setTextColor(Color.DKGRAY)
+            holder.txtExpiration.setTextColor(Color.DKGRAY)
+        }
     }
 
-
     fun removeAt(position: Int){
+        Log.d("ColorDebug","Adapter: remove At")
         val myDatabase = context.openOrCreateDatabase("item_list", Context.MODE_PRIVATE, null)
         val sqlDelete = "DELETE FROM item WHERE item_name = '" + items[position].itemName + "' AND quantity = " + items[position].quantity + " AND expiration = '" + items[position].expiration + "'"
         Log.d("SQL_DELETE", "item_name " + items[position].itemName)
