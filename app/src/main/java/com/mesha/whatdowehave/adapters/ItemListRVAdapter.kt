@@ -55,8 +55,11 @@ class ItemListRVAdapter(val items: ArrayList<ItemModel>, val context: Context) :
 
     fun removeAt(position: Int){
         Log.d("ColorDebug","Adapter: remove At")
+        val removeItemName = items[position].itemName
+        val removeQuantity = items[position].quantity
+        val dbRemoveExp = SimpleDateFormat("yyyy-MM-dd").format(SimpleDateFormat("dd/MM/yyyy").parse(items[position].expiration))
         val myDatabase = context.openOrCreateDatabase("item_list", Context.MODE_PRIVATE, null)
-        val sqlDelete = "DELETE FROM item WHERE item_name = '" + items[position].itemName + "' AND quantity = " + items[position].quantity + " AND expiration = '" + items[position].expiration + "'"
+        val sqlDelete = "DELETE FROM item WHERE item_name = '$removeItemName' AND quantity = $removeQuantity AND expiration = '$dbRemoveExp'"
         Log.d("SQL_DELETE", "item_name " + items[position].itemName)
         Log.d("SQL_DELETE", "quantity " + items[position].quantity)
         Log.d("SQL_DELETE", "expiration " + items[position].expiration)

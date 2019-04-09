@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
 import com.mesha.whatdowehave.R
 import com.mesha.whatdowehave.adapters.ItemListRVAdapter
 import com.mesha.whatdowehave.classes.SwipeDelete
@@ -20,12 +21,15 @@ import java.lang.Exception
 class MainActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
+    private lateinit var emptyView: TextView
     var itemList:ArrayList<ItemModel> = arrayListOf()
     var adapter = ItemListRVAdapter(itemList, this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        var itemCount = 0
 
         try{
 
@@ -39,8 +43,9 @@ class MainActivity : AppCompatActivity() {
             val qtyIx = cursor.getColumnIndex("quantity")
             val expIx = cursor.getColumnIndex("expiration")
 
-
             cursor.moveToFirst()
+            itemCount = cursor.count
+
             while (cursor != null && !cursor.isAfterLast){
                 var tItem = ItemModel(cursor.getInt(itemIdIx) ,cursor.getString(itemNameIx), cursor.getInt(qtyIx), cursor.getString(expIx))
                 itemList.add(tItem)
@@ -65,13 +70,31 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+        emptyView = findViewById(R.id.tv_empty_view)
         recyclerView = findViewById(R.id.list_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
 
+        if(itemCount == 0){
+            recyclerView.visibility = View.GONE
+            emptyView.visibility = View.VISIBLE
+        }
+        else{
+            recyclerView.visibility = View.VISIBLE
+            emptyView.visibility = View.GONE
+        }
+
         val swipeHandler = object : SwipeDelete(this){
             override fun onSwiped(p0: RecyclerView.ViewHolder, p1: Int) {
                 adapter.removeAt(p0.adapterPosition)
+                if(adapter.itemCount == 0){
+                    recyclerView.visibility = View.GONE
+                    emptyView.visibility = View.VISIBLE
+                }
+                else{
+                    recyclerView.visibility = View.VISIBLE
+                    emptyView.visibility = View.GONE
+                }
             }
         }
 
@@ -113,6 +136,15 @@ class MainActivity : AppCompatActivity() {
         val expIx = cursor.getColumnIndex("expiration")
 
         cursor.moveToFirst()
+
+        if(cursor.count == 0){
+            recyclerView.visibility = View.GONE
+            emptyView.visibility = View.VISIBLE
+        }
+        else{
+            recyclerView.visibility = View.VISIBLE
+            emptyView.visibility = View.GONE
+        }
 
         itemList.clear()
 

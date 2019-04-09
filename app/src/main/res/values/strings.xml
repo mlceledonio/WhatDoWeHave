@@ -8,4 +8,5 @@
     <string name="lbl_extraction">Expiration</string>
     <string name="lbl_et_expiration">Expiration</string>
     <string name="lbl_btn_update">Update</string>
+    <string name="text_empty_list">Click + to add items</string>
 </resources>
