@@ -62,11 +62,14 @@ class MainActivity : AppCompatActivity() {
 
         adapter.setOnItemClickListener(object : ItemListRVAdapter.ItemClickListener{
             override fun onItemClick(pos: Int, view: View) {
-                val updateIntent = Intent(applicationContext, UpdateItemActivity::class.java)
+                /*val updateIntent = Intent(applicationContext, UpdateItemActivity::class.java)
                 updateIntent.putExtra("KEY_ITEM_NAME", itemList.get(pos).itemName)
                 updateIntent.putExtra("KEY_QUANTITY", itemList.get(pos).quantity)
                 updateIntent.putExtra("KEY_EXPIRATION", itemList.get(pos).expiration)
-                startActivityForResult(updateIntent, 2)
+                startActivityForResult(updateIntent, 2)*/
+                var itemExpanded: Boolean = itemList.get(pos).isExpanded()
+                itemList.get(pos).expanded = !itemExpanded
+                adapter.notifyItemChanged(pos)
             }
         })
 

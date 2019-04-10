@@ -4,31 +4,57 @@
               android:layout_height="wrap_content"
               android:weightSum="5"
               android:background="@drawable/customborder"
-              android:orientation="horizontal">
-    <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:id="@+id/tv_listItem"
-            android:textSize="30dp"
-            android:layout_weight="4"
-    />
+              android:orientation="vertical">
+
     <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-        <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/tv_listQty"
-                android:textSize="10dp"
+                android:orientation="horizontal">
+        <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:id="@+id/tv_listItem"
+                android:textSize="30dp"
+                android:layout_weight="4"
         />
-        <TextView
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_listQty"
+                    android:textSize="10dp"
+            />
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_listExp"
+                    android:textSize="10dp"
+            />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+            android:id="@+id/layout_item_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+    >
+        <Button
+                android:id="@+id/btn_item_edit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/tv_listExp"
-                android:textSize="10dp"
+                android:text="@string/lbl_btn_edit"
+        />
+        <Button
+                android:id="@+id/btn_item_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_btn_delete"
         />
     </LinearLayout>
+
 </LinearLayout>

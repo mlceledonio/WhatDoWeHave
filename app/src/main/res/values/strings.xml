@@ -9,4 +9,6 @@
     <string name="lbl_et_expiration">Expiration</string>
     <string name="lbl_btn_update">Update</string>
     <string name="text_empty_list">Click + to add items</string>
+    <string name="lbl_btn_delete">Delete</string>
+    <string name="lbl_btn_edit">Edit</string>
 </resources>

@@ -8,12 +8,17 @@ class ItemModel{
     var itemName: String = ""
     var quantity: Int = 0
     var expiration: String = ""
+    var expanded: Boolean = true
 
     constructor(itemId: Int, itemName: String, quantity: Int, expiration: String){
         this.itemId = itemId
         this.itemName = itemName
         this.quantity = quantity
         this.expiration = SimpleDateFormat("dd/MM/yyyy").format(SimpleDateFormat("yyyy-MM-dd").parse(expiration))
+    }
+
+    fun isExpanded():Boolean{
+        return expanded
     }
 
 }

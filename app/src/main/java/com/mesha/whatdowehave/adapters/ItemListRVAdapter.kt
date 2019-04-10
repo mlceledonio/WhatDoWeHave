@@ -40,6 +40,13 @@ class ItemListRVAdapter(val items: ArrayList<ItemModel>, val context: Context) :
         holder.txtQuantity.text = (items[position].quantity).toString()
         holder.txtExpiration.text = items[position].expiration
 
+        if(items[position].isExpanded()){
+            holder.buttonLayout.visibility = View.GONE
+        }
+        else{
+            holder.buttonLayout.visibility = View.VISIBLE
+        }
+
         if((items[position].expiration.isNotBlank()) && SimpleDateFormat("dd/MM/yyyy").parse(items[position].expiration).before(Date())){
             holder.txtItemName.setTextColor(Color.RED)
             holder.txtQuantity.setTextColor(Color.RED)
@@ -81,6 +88,7 @@ class ItemListRVAdapter(val items: ArrayList<ItemModel>, val context: Context) :
         val txtItemName = view.tv_listItem
         val txtQuantity = view.tv_listQty
         val txtExpiration = view.tv_listExp
+        val buttonLayout = view.layout_item_button
 
         init {
             itemView.setOnClickListener(this)
