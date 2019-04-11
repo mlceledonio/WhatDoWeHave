@@ -6,13 +6,13 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.TextView
 import com.mesha.whatdowehave.R
 import com.mesha.whatdowehave.adapters.ItemListRVAdapter
-import com.mesha.whatdowehave.classes.SwipeDelete
 import com.mesha.whatdowehave.models.ItemModel
 import java.lang.Exception
 import java.text.SimpleDateFormat
@@ -29,6 +29,7 @@ class ArchiveActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_archive)
 
+
         try{
             Log.d("ArchiveDebug", "Entered try phrase")
             val dateToday = SimpleDateFormat("yyyy-MM-dd").format(Date())
@@ -43,6 +44,7 @@ class ArchiveActivity : AppCompatActivity() {
             val expIx = cursor.getColumnIndex("expiration")
 
             cursor.moveToFirst()
+
             while (cursor != null && !cursor.isAfterLast){
                 var tItem = ItemModel(cursor.getInt(itemIdIx) ,cursor.getString(itemNameIx), cursor.getInt(qtyIx), cursor.getString(expIx))
                 itemList.add(tItem)
@@ -59,18 +61,31 @@ class ArchiveActivity : AppCompatActivity() {
 
         }
 
+        adapter.setOnItemClickListener(object : ItemListRVAdapter.ItemClickListener{
+            override fun onItemClick(pos: Int, view: View) {
+
+                var itemExpanded: Boolean = itemList.get(pos).isExpanded()
+                itemList.get(pos).expanded = !itemExpanded
+                adapter.notifyItemChanged(pos)
+            }
+
+            override fun onEditClick(pos: Int, view: View) {
+                val updateIntent = Intent(applicationContext, UpdateItemActivity::class.java)
+                updateIntent.putExtra("KEY_ITEM_NAME", itemList.get(pos).itemName)
+                updateIntent.putExtra("KEY_QUANTITY", itemList.get(pos).quantity)
+                updateIntent.putExtra("KEY_EXPIRATION", itemList.get(pos).expiration)
+                startActivityForResult(updateIntent, 2)
+            }
+
+            override fun onDeleteClick(pos: Int, view: View) {
+                adapter.removeAt(pos)
+            }
+        })
+
         recyclerView = findViewById(R.id.archive_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
 
-        val swipeHandler = object : SwipeDelete(this){
-            override fun onSwiped(p0: RecyclerView.ViewHolder, p1: Int) {
-                adapter.removeAt(p0.adapterPosition)
-            }
-        }
-
-        val itemTouchHelper = ItemTouchHelper(swipeHandler)
-        itemTouchHelper.attachToRecyclerView(recyclerView)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

@@ -82,21 +82,32 @@ class ItemListRVAdapter(val items: ArrayList<ItemModel>, val context: Context) :
 
     inner class ViewHolder (view: View) : RecyclerView.ViewHolder(view),View.OnClickListener{
         override fun onClick(v: View) {
-            clickListener.onItemClick(adapterPosition, v)
+            when(v.id){
+                buttonEdit.id -> clickListener.onEditClick(adapterPosition, v)
+                buttonDelete.id -> clickListener.onDeleteClick(adapterPosition, v)
+                else -> clickListener.onItemClick(adapterPosition, v)
+            }
+
         }
 
         val txtItemName = view.tv_listItem
         val txtQuantity = view.tv_listQty
         val txtExpiration = view.tv_listExp
         val buttonLayout = view.layout_item_button
+        val buttonEdit = view.btn_item_edit
+        val buttonDelete = view.btn_item_delete
 
         init {
             itemView.setOnClickListener(this)
+            buttonEdit.setOnClickListener(this)
+            buttonDelete.setOnClickListener(this)
         }
     }
 
     interface ItemClickListener{
         fun onItemClick(pos: Int, view: View)
+        fun onEditClick(pos: Int, view: View)
+        fun onDeleteClick(pos: Int, view: View)
     }
 }
 

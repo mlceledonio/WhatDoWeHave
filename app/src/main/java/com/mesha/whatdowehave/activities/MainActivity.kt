@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -14,7 +13,6 @@ import android.view.View
 import android.widget.TextView
 import com.mesha.whatdowehave.R
 import com.mesha.whatdowehave.adapters.ItemListRVAdapter
-import com.mesha.whatdowehave.classes.SwipeDelete
 import com.mesha.whatdowehave.models.ItemModel
 import java.lang.Exception
 
@@ -62,14 +60,30 @@ class MainActivity : AppCompatActivity() {
 
         adapter.setOnItemClickListener(object : ItemListRVAdapter.ItemClickListener{
             override fun onItemClick(pos: Int, view: View) {
-                /*val updateIntent = Intent(applicationContext, UpdateItemActivity::class.java)
-                updateIntent.putExtra("KEY_ITEM_NAME", itemList.get(pos).itemName)
-                updateIntent.putExtra("KEY_QUANTITY", itemList.get(pos).quantity)
-                updateIntent.putExtra("KEY_EXPIRATION", itemList.get(pos).expiration)
-                startActivityForResult(updateIntent, 2)*/
+
                 var itemExpanded: Boolean = itemList.get(pos).isExpanded()
                 itemList.get(pos).expanded = !itemExpanded
                 adapter.notifyItemChanged(pos)
+            }
+
+            override fun onEditClick(pos: Int, view: View) {
+                val updateIntent = Intent(applicationContext, UpdateItemActivity::class.java)
+                updateIntent.putExtra("KEY_ITEM_NAME", itemList.get(pos).itemName)
+                updateIntent.putExtra("KEY_QUANTITY", itemList.get(pos).quantity)
+                updateIntent.putExtra("KEY_EXPIRATION", itemList.get(pos).expiration)
+                startActivityForResult(updateIntent, 2)
+            }
+
+            override fun onDeleteClick(pos: Int, view: View) {
+                adapter.removeAt(pos)
+                if(adapter.itemCount == 0){
+                    recyclerView.visibility = View.GONE
+                    emptyView.visibility = View.VISIBLE
+                }
+                else{
+                    recyclerView.visibility = View.VISIBLE
+                    emptyView.visibility = View.GONE
+                }
             }
         })
 
@@ -86,23 +100,6 @@ class MainActivity : AppCompatActivity() {
             recyclerView.visibility = View.VISIBLE
             emptyView.visibility = View.GONE
         }
-
-        val swipeHandler = object : SwipeDelete(this){
-            override fun onSwiped(p0: RecyclerView.ViewHolder, p1: Int) {
-                adapter.removeAt(p0.adapterPosition)
-                if(adapter.itemCount == 0){
-                    recyclerView.visibility = View.GONE
-                    emptyView.visibility = View.VISIBLE
-                }
-                else{
-                    recyclerView.visibility = View.VISIBLE
-                    emptyView.visibility = View.GONE
-                }
-            }
-        }
-
-        val itemTouchHelper = ItemTouchHelper(swipeHandler)
-        itemTouchHelper.attachToRecyclerView(recyclerView)
 
         val fab: View = findViewById(R.id.fab)
         fab.setOnClickListener{
