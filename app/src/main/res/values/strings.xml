@@ -11,4 +11,5 @@
     <string name="text_empty_list">Click + to add items</string>
     <string name="lbl_btn_delete">Delete</string>
     <string name="lbl_btn_edit">Edit</string>
+    <string name="text_empty_archive">All items have a stock</string>
 </resources>
