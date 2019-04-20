@@ -35,7 +35,7 @@ class ArchiveFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         val myDatabase = activity!!.openOrCreateDatabase("item_list", Context.MODE_PRIVATE, null)
-        val sqlSelectName = "SELECT item_id, item_name, quantity, expiration FROM item WHERE quantity = 0"
+        val sqlSelectName = "SELECT item_id, item_name, quantity, expiration FROM item WHERE quantity = 0 ORDER BY item_name"
         val cursor = myDatabase.rawQuery(sqlSelectName, null)
         val itemIdIx = cursor.getColumnIndex("item_id")
         val itemNameIx = cursor.getColumnIndex("item_name")
@@ -82,7 +82,7 @@ class ArchiveFragment : Fragment() {
             val dateToday = SimpleDateFormat("yyyy-MM-dd").format(Date())
             Log.d("ArchiveDebug", dateToday.toString())
             val myDatabase = activity!!.openOrCreateDatabase("item_list", Context.MODE_PRIVATE, null)
-            val sqlSelectName = "SELECT item_id, item_name, quantity, expiration FROM item WHERE quantity = 0"
+            val sqlSelectName = "SELECT item_id, item_name, quantity, expiration FROM item WHERE quantity = 0 ORDER BY item_name"
             Log.d("ArchiveDebug", sqlSelectName)
             val cursor = myDatabase.rawQuery(sqlSelectName, null)
             val itemIdIx = cursor.getColumnIndex("item_id")

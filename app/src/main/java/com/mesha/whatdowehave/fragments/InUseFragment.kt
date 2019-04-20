@@ -34,7 +34,7 @@ class InUseFragment : Fragment() {
         super.onResume()
         Log.d("FragDebug", "OnResume")
         val myDatabase = activity!!.openOrCreateDatabase("item_list", Context.MODE_PRIVATE, null)
-        val sqlSelectName = "SELECT item_id, item_name, quantity, expiration FROM item WHERE quantity != 0"
+        val sqlSelectName = "SELECT item_id, item_name, quantity, expiration FROM item WHERE quantity != 0 ORDER BY item_name"
         val cursor = myDatabase.rawQuery(sqlSelectName, null)
         val itemIdIx = cursor.getColumnIndex("item_id")
         val itemNameIx = cursor.getColumnIndex("item_name")
@@ -73,16 +73,17 @@ class InUseFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        var view:View=inflater!!.inflate(R.layout.fragment_in_use, container, false)
+        val view : View=inflater.inflate(R.layout.fragment_in_use, container, false)
 
         var itemCount = 0
+
 
         try{
 
             val myDatabase = activity!!.openOrCreateDatabase("item_list", Context.MODE_PRIVATE, null)
             val sqlCreate = "CREATE TABLE IF NOT EXISTS item (item_id INTEGER PRIMARY KEY,item_name VARCHAR NOT NULL, quantity INT NOT NULL, expiration TEXT)"
             myDatabase.execSQL(sqlCreate)
-            val sqlSelectName = "SELECT item_id, item_name, quantity, expiration FROM item WHERE quantity != 0"
+            val sqlSelectName = "SELECT item_id, item_name, quantity, expiration FROM item WHERE quantity != 0 ORDER BY item_name"
             val cursor = myDatabase.rawQuery(sqlSelectName, null)
             val itemIdIx = cursor.getColumnIndex("item_id")
             val itemNameIx = cursor.getColumnIndex("item_name")
@@ -93,7 +94,7 @@ class InUseFragment : Fragment() {
             itemCount = cursor.count
 
             while (cursor != null && !cursor.isAfterLast){
-                var tItem = ItemModel(cursor.getInt(itemIdIx) ,cursor.getString(itemNameIx), cursor.getInt(qtyIx), cursor.getString(expIx))
+                val tItem = ItemModel(cursor.getInt(itemIdIx) ,cursor.getString(itemNameIx), cursor.getInt(qtyIx), cursor.getString(expIx))
                 itemList.add(tItem)
 
                 cursor.moveToNext()
@@ -109,7 +110,7 @@ class InUseFragment : Fragment() {
         adapter.setOnItemClickListener(object : ItemListRVAdapter.ItemClickListener{
             override fun onItemClick(pos: Int, view: View) {
 
-                var itemExpanded: Boolean = itemList.get(pos).isExpanded()
+                val itemExpanded: Boolean = itemList.get(pos).isExpanded()
                 itemList.get(pos).expanded = !itemExpanded
                 adapter.notifyItemChanged(pos)
             }
@@ -137,7 +138,7 @@ class InUseFragment : Fragment() {
 
         emptyView = view.findViewById(R.id.tv_empty_view)
         recyclerView = view.findViewById(R.id.list_recycler_view)
-        recyclerView.layoutManager = LinearLayoutManager(activity!!)
+        recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.adapter = adapter
 
         if(itemCount == 0){

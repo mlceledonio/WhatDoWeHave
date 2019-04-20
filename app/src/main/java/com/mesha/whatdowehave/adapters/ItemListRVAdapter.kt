@@ -47,6 +47,12 @@ class ItemListRVAdapter(val items: ArrayList<ItemModel>, val context: Context) :
             holder.buttonLayout.visibility = View.VISIBLE
         }
 
+        var calendarObj = Calendar.getInstance()
+        calendarObj.add(Calendar.DAY_OF_YEAR, 7)
+
+        var dateInAWeek = SimpleDateFormat("dd/MM/yyyy").parse(SimpleDateFormat("dd/MM/yyyy").format(calendarObj.time))
+
+
         if((items[position].expiration.isNotBlank()) && SimpleDateFormat("dd/MM/yyyy").parse(items[position].expiration).before(Date())){
             holder.txtItemName.setTextColor(Color.RED)
             holder.txtQuantity.setTextColor(Color.RED)
@@ -54,9 +60,16 @@ class ItemListRVAdapter(val items: ArrayList<ItemModel>, val context: Context) :
         }
 
         if((items[position].expiration.isNotBlank()) && SimpleDateFormat("dd/MM/yyyy").parse(items[position].expiration).after(Date())){
-            holder.txtItemName.setTextColor(Color.DKGRAY)
-            holder.txtQuantity.setTextColor(Color.DKGRAY)
-            holder.txtExpiration.setTextColor(Color.DKGRAY)
+            if(SimpleDateFormat("dd/MM/yyyy").parse(items[position].expiration).before(dateInAWeek)){
+                holder.txtItemName.setTextColor(Color.BLUE)
+                holder.txtQuantity.setTextColor(Color.BLUE)
+                holder.txtExpiration.setTextColor(Color.BLUE)
+            } else {
+                holder.txtItemName.setTextColor(Color.DKGRAY)
+                holder.txtQuantity.setTextColor(Color.DKGRAY)
+                holder.txtExpiration.setTextColor(Color.DKGRAY)
+            }
+
         }
     }
 
